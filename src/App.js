@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import List from './components/List'
 import AddListButton from "./components/AddList";
+import Tasks from"./components/Tasks"
 
 import DB from './assets/db.json';
 
@@ -60,10 +61,11 @@ function App() {
               isRemovable
           />
           <AddListButton onAdd={onAddList} colors={DB.colors}/>
-          <div className="todo__tasks">
-
-          </div>
         </div>
+
+        <div className="todo__tasks">
+          <Tasks />
+          </div>
       </div>);
 }
 
