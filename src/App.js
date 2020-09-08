@@ -54,6 +54,9 @@ function App() {
           />
           <List
               items= {lists}
+              onRemove={(item) => {
+
+              }}
               isRemovable
           />
           <AddListButton onAdd={onAddList} colors={DB.colors}/>
