@@ -1,5 +1,8 @@
 import React from 'react';
 import List from './components/List'
+import AddListButton from "./components/AddList";
+
+import DB from './assets/db.json';
 
 function App() {
   return (
@@ -27,7 +30,7 @@ function App() {
                               0.743212 2.40001 1.24001 2.40001H2.86001C3.35681 2.40001 3.40001 1.99771 3.40001
                               1.50001C3.40001 1.00231 3.35681 0.600006 2.86001 0.600006Z" fill="#7C7C7C"
                         />
-                  </svg>,
+                      </svg>,
                   name: 'Все задачи',
                   active: true
                 }
@@ -36,33 +39,22 @@ function App() {
           <List
               items={[
                 {
-                  color : 'green',
+                  color: 'green',
                   name: 'Покупки'
                 },
                 {
-                  color : 'blue',
+                  color: 'blue',
                   name: 'Фронтенд',
                   active: true
                 },
                 {
-                  color : 'pink',
+                  color: 'pink',
                   name: 'Фильмы и сериалы'
                 }
               ]}
-              isRemovable = {true}
+              isRemovable
           />
-          <List
-            items = {[
-              {
-                className: "list__add-button",
-                icon: <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M6 1V11" stroke="#111" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                  <path d="M1 6H11" stroke="#111" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>,
-                name: 'Добавить список'
-              }
-            ]}
-          />
+          <AddListButton colors={DB.colors}/>
           <div className="todo__tasks">
 
           </div>
