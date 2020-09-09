@@ -36,14 +36,19 @@ const AddList = ({colors, onAdd}) => {
         .post('http://localhost:3001/lists', {
           name: inputValue,
           colorId: selectedColor
-        }).then(({data}) => {
-      const color = colors.filter(c => c.id === selectedColor)[0];
-      const listObj = {...data, color};
-      onAdd(listObj);
-      onClose();
-    }).finally( () => {
-      setIsLoading(false);
-    });
+        })
+        .then(({data}) => {
+          const color = colors.filter(c => c.id === selectedColor)[0];
+          const listObj = {...data, color};
+          onAdd(listObj);
+          onClose();
+        })
+        .catch(() => {
+          alert('Ошибка при добавлении списка');
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
   };
 
   return (
@@ -62,30 +67,30 @@ const AddList = ({colors, onAdd}) => {
             ]}
         />
         {visiblePopup && (<div className="add-list__popup">
-          <img onClick={onClose} className="add-list__popup-close-btn" src={closeSvg}
-               alt="Close button"/>
-          <input
-              value={inputValue}
-              onChange={e => setInputValue(e.target.value)}
-              className="field"
-              type="text"
-              placeholder="Название списка"
-          />
+              <img onClick={onClose} className="add-list__popup-close-btn" src={closeSvg}
+                   alt="Close button"/>
+              <input
+                  value={inputValue}
+                  onChange={e => setInputValue(e.target.value)}
+                  className="field"
+                  type="text"
+                  placeholder="Название списка"
+              />
 
-          <div className="add-list__popup-colors">
-            {colors.map(color => (
-                <Badge
-                    onClick={() => selectColor(color.id)}
-                    key={color.id}
-                    color={color.name}
-                    className={selectedColor === color.id && 'active'}
-                />
-            ))}
-          </div>
-          <button onClick={addList} className="button">
-            {isLoading ? 'Добавление...' : 'Добавить'}
-          </button>
-        </div>
+              <div className="add-list__popup-colors">
+                {colors.map(color => (
+                    <Badge
+                        onClick={() => selectColor(color.id)}
+                        key={color.id}
+                        color={color.name}
+                        className={selectedColor === color.id && 'active'}
+                    />
+                ))}
+              </div>
+              <button onClick={addList} className="button">
+                {isLoading ? 'Добавление...' : 'Добавить'}
+              </button>
+            </div>
         )}
       </div>
   );
