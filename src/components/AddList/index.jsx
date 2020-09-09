@@ -1,15 +1,24 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
+import axios from 'axios';
+
 import List from "../List";
 import Badge from "../Badge"
 
 import closeSvg from '../../assets/img/close.svg'
 
-import './AddListButton.scss';
+import './AddList.scss';
 
-const AddListButton = ({colors, onAdd}) => {
+const AddList = ({colors, onAdd}) => {
   const [visiblePopup, setVisiblePopup] = useState(false);
-  const [selectedColor, selectColor] = useState(colors[0].id);
+  const [selectedColor, selectColor] = useState(3);
+  const [isLoading, setIsLoading] = useState(false);
   const [inputValue, setInputValue] = useState('');
+
+  useEffect(() => {
+    if (Array.isArray(colors)) {
+      selectColor(colors[0].id);
+    }
+  }, [colors]);
 
   const onClose = () => {
     setVisiblePopup(false);
@@ -22,14 +31,19 @@ const AddListButton = ({colors, onAdd}) => {
       alert('Введите название списка');
       return;
     }
-
-    const color = colors.filter(c => c.id === selectedColor)[0].name;
-    onAdd({
-      "id": Math.random(),
-      "name": inputValue,
-      color
+    setIsLoading(true);
+    axios
+        .post('http://localhost:3001/lists', {
+          name: inputValue,
+          colorId: selectedColor
+        }).then(({data}) => {
+      const color = colors.filter(c => c.id === selectedColor)[0];
+      const listObj = {...data, color};
+      onAdd(listObj);
+      onClose();
+    }).finally( () => {
+      setIsLoading(false);
     });
-    onClose();
   };
 
   return (
@@ -47,7 +61,7 @@ const AddListButton = ({colors, onAdd}) => {
               }
             ]}
         />
-        {visiblePopup && <div className="add-list__popup">
+        {visiblePopup && (<div className="add-list__popup">
           <img onClick={onClose} className="add-list__popup-close-btn" src={closeSvg}
                alt="Close button"/>
           <input
@@ -55,7 +69,9 @@ const AddListButton = ({colors, onAdd}) => {
               onChange={e => setInputValue(e.target.value)}
               className="field"
               type="text"
-              placeholder="Название списка"/>
+              placeholder="Название списка"
+          />
+
           <div className="add-list__popup-colors">
             {colors.map(color => (
                 <Badge
@@ -66,10 +82,13 @@ const AddListButton = ({colors, onAdd}) => {
                 />
             ))}
           </div>
-          <button onClick={addList} className="button">Добавить</button>
-        </div>}
+          <button onClick={addList} className="button">
+            {isLoading ? 'Добавление...' : 'Добавить'}
+          </button>
+        </div>
+        )}
       </div>
   );
 };
 
-export default AddListButton;
+export default AddList;
