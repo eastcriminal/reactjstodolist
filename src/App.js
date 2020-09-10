@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import axios from 'axios';
+import {Route, useHistory} from 'react-router-dom';
 
 import {AddList, List, Tasks} from './components';
 
@@ -8,6 +9,7 @@ function App() {
   const [lists, setLists] = useState(null);
   const [colors, setColors] = useState(null);
   const [activeItem, setActiveItem] = useState(null);
+  let history = useHistory();
 
   useEffect(() => {
     axios.get('http://localhost:3001/lists?_expand=color&_embed=tasks').then(({data}) => {
@@ -47,10 +49,22 @@ function App() {
 
   };
 
+  useEffect(() => {
+    const listId = history.location.pathname.split('lists/')[1];
+    if (lists) {
+      const list = lists.find(list => list.id === Number(listId));
+      console.log(list);
+      setActiveItem(list);
+    }
+  }, [lists, history.location.pathname]);
+
   return (
       <div className="todo">
         <div className="todo__sidebar">
           <List
+              onClickItem={ () => {
+                history.push('/');
+              }}
               items={[
                 {
                   icon:
@@ -85,8 +99,9 @@ function App() {
                     const newLists = lists.filter(item => item.id !== id);
                     setLists(newLists);
                   }}
-                  onClickItem={item => {
-                    setActiveItem(item);
+                  onClickItem={list => {
+                    history.push(`/lists/${list.id}`);
+                    setActiveItem(list);
                   }}
                   activeItem={activeItem}
                   isRemovable
@@ -99,7 +114,27 @@ function App() {
         </div>
 
         <div className="todo__tasks">
-          {lists && activeItem && <Tasks list={activeItem} onAddTask={onAddTask} onEditTitle={onEditListTitle}/>}
+          <Route exact path="/">
+            {lists &&
+            lists.map(list => (
+                <Tasks
+                    key={list.id}
+                    list={list}
+                    onAddTask={onAddTask}
+                    onEditTitle={onEditListTitle}
+                    withoutEmpty
+                />)
+            )}
+          </Route>
+          <Route path="/lists/:id">
+            {lists && activeItem && (
+                <Tasks
+                    list={activeItem}
+                    onAddTask={onAddTask}
+                    onEditTitle={onEditListTitle}
+                />
+            )}
+          </Route>
         </div>
       </div>);
 }
