@@ -39,7 +39,7 @@ const AddList = ({colors, onAdd}) => {
         })
         .then(({data}) => {
           const color = colors.filter(c => c.id === selectedColor)[0];
-          const listObj = {...data, color};
+          const listObj = {...data, color, tasks: []};
           onAdd(listObj);
           onClose();
         })
@@ -67,8 +67,11 @@ const AddList = ({colors, onAdd}) => {
             ]}
         />
         {visiblePopup && (<div className="add-list__popup">
-              <img onClick={onClose} className="add-list__popup-close-btn" src={closeSvg}
-                   alt="Close button"/>
+              <img
+                  onClick={onClose}
+                  className="add-list__popup-close-btn"
+                  src={closeSvg}
+                  alt="Close button"/>
               <input
                   value={inputValue}
                   onChange={e => setInputValue(e.target.value)}

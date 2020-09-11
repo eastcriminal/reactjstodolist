@@ -1,13 +1,15 @@
 import React from 'react';
 import axios from 'axios';
+import {Link} from 'react-router-dom';
 
 import editSvg from '../../assets/img/edit.svg';
 
 import AddTaskForm from './AddTaskForm/index.jsx';
+import Task from './Task.jsx';
 
 import './Tasks.scss';
 
-const Tasks = ({list, onEditTitle, onAddTask, withoutEmpty}) => {
+const Tasks = ({list, onEditTitle, onAddTask, onEditTask, onRemoveTask, onCompleteTask, withoutEmpty}) => {
 
   const editTitle = () => {
     const newTitle = window.prompt('Название списка', list.name);
@@ -24,33 +26,32 @@ const Tasks = ({list, onEditTitle, onAddTask, withoutEmpty}) => {
 
   return (
       <div className="tasks">
-        <h2  style={{color: list.color.hex}} className="tasks__title">
-          {list.name}
-          <img onClick={() => {
-            editTitle()
-          }} src={editSvg} alt="Edit icon"/>
-        </h2>
+        <Link to={`/lists/${list.id}`}>
+          <h2 style={{color: list.color.hex}} className="tasks__title">
+            {list.name}
+            <img
+                onClick={() => {editTitle()}}
+                src={editSvg}
+                alt="Edit icon"/>
+          </h2>
+        </Link>
 
         <div className="tasks__items">
-          {!withoutEmpty && list.tasks.length === 0 && <h2>Задачи отсутствуют</h2>}
-          {list.tasks.map(task => (
-              <div key={task.id} className="tasks__items-row">
-                <div className="checkbox">
-                  <input id={`task-${task.id}`} type="checkbox"/>
-                  <label htmlFor={`task-${task.id}`}>
-                    <svg width="11" height="8" viewBox="0 0 11 8" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M9.29999 1.20001L3.79999 6.70001L1.29999 4.20001" stroke="black" strokeWidth="1.5"
-                            strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                  </label>
-                </div>
-                <p>
-                  {task.text}
-                </p>
-              </div>
+          {!withoutEmpty && list.tasks && !list.tasks.length  && (
+              <h2>Задачи отсутствуют</h2>
+          )}
+          {list.tasks &&
+            list.tasks.map(task => (
+              <Task
+                  key={task.id}
+                  list={list}
+                  {...task}
+                  onEdit={onEditTask}
+                  onRemove={onRemoveTask}
+                  onComplete={onCompleteTask}
+              />
           ))}
-          <AddTaskForm list={list} onAddTask={onAddTask}
-          />
+          <AddTaskForm key={list.id} list={list} onAddTask={onAddTask} />
         </div>
       </div>
   );
