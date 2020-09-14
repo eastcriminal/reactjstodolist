@@ -46,7 +46,7 @@ const Tasks = ({list, onEditTitle, onAddTask, onEditTask, onRemoveTask, onComple
                   key={task.id}
                   list={list}
                   {...task}
-                  onEdit={onEditTask}
+                  onEditTask={onEditTask}
                   onRemove={onRemoveTask}
                   onComplete={onCompleteTask}
               />
