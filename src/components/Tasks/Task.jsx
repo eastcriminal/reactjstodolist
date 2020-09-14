@@ -1,4 +1,5 @@
 import React from 'react';
+import classNames from 'classnames';
 
 const Task = ({id, text, completed, list, onRemove, onEdit, onComplete}) => {
 
@@ -22,7 +23,7 @@ const Task = ({id, text, completed, list, onRemove, onEdit, onComplete}) => {
             </svg>
           </label>
         </div>
-        <p>
+        <p className={classNames(completed ? 'task--completed' : '')}>
           {text}
         </p>
         <div className="tasks__items-row-actions">

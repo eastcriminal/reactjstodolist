@@ -89,10 +89,26 @@
     }
 
     &-row {
-
       display: flex;
       align-items: center;
       margin-bottom: 7px;
+      background-color: transparent;
+
+      &:hover {
+        background-color: rgba(200, 200, 200, .08);
+      }
+
+      p {
+        margin-left: 15px;
+        font-size: 15px;
+        width: 100%;
+        border: 0;
+
+        &.task--completed {
+          text-decoration: rgba(255, 0, 0, 0.7) line-through;
+        }
+      }
+
 
       &:hover &-actions {
         opacity: 1;
@@ -127,13 +143,6 @@
             opacity: 0.4;
           }
         }
-      }
-
-      p {
-        margin-left: 15px;
-        border: 0;
-        font-size: 15px;
-        width: 100%;
       }
     }
   }
